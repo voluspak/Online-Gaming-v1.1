@@ -6,8 +6,9 @@ import useSearch from './Hooks/useSearch'
 
 const App = () => {
   const [search, setSearch] = useState('')
+  const [orden, setOrden] = useState()
   const { searchingError } = useSearch({ search })
-  const { games, getGames } = useGame({ search })
+  const { games, getGames, loading } = useGame({ search, orden })
 
   function handleSubmit (event) {
     event.preventDefault()
@@ -19,12 +20,16 @@ const App = () => {
     setSearch(newSearch)
   }
 
+  function handleOrden () {
+    setOrden(!orden)
+  }
   return (
     <div className=' mx-auto w-full grid place-content-center'>
       <header className='flex flex-col items-center gap-5 justify-center w-full h-52'>
         <h1 className='font-bold text-3xl'>Online Gaming App</h1>
         <form onSubmit={handleSubmit} className='flex gap-5'>
           <input value={search} onChange={handleChange} className='w-3/4 p-2 border border-gray-500 rounded-md ' placeholder='Grand Thef Auto, Counter...' />
+          <input type='checkbox' onChange={handleOrden} checked={orden} />
           <button type='submit' className='px-3 shadow-lg active:shadow-md border rounded-md'>Buscar</button>
         </form>
         {
@@ -33,7 +38,11 @@ const App = () => {
         }
       </header>
       <main>
-        <Games gameList={games} />
+        {
+          loading
+            ? (<span>Cargando...</span>)
+            : <Games gameList={games} />
+        }
       </main>
     </div>
   )

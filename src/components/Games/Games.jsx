@@ -4,7 +4,7 @@ function Games ({ gameList }) {
   const hasGames = gameList?.length > 0
   return (
     hasGames
-      ? <DisplayGames gameList={gameList} />
+      ? <DisplayGames />
       : <NoResults />
   )
 }
