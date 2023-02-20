@@ -7,10 +7,11 @@ import useSearch from './Hooks/useSearch'
 const App = () => {
   const [search, setSearch] = useState('')
   const { searchingError } = useSearch({ search })
-  const { mappedList } = useGame()
+  const { games, getGames } = useGame({ search })
 
   function handleSubmit (event) {
     event.preventDefault()
+    getGames()
   }
 
   function handleChange (event) {
@@ -32,7 +33,7 @@ const App = () => {
         }
       </header>
       <main>
-        <Games gameList={mappedList} />
+        <Games gameList={games} />
       </main>
     </div>
   )
