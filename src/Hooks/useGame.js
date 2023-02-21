@@ -1,31 +1,46 @@
-import { useState, useRef, useMemo } from 'react'
-import { searchingGamesList } from '../Services/games'
+import { useState, useRef, useCallback, useMemo } from 'react'
+import { searchingGamesList, mainGamesList } from '../Services/games'
 
 const useGame = ({ search, orden }) => {
-  const [games, setGames] = useState()
+  const [searchedGames, setSearchedGames] = useState()
+  const [defaultGames, setDefaultGames] = useState()
   const [loading, setLoading] = useState(false)
-  const prevSearch = useRef()
+  const prevSearch = useRef(search)
 
-  async function getGames () {
-    if (prevSearch.current === search) return
-    try {
-      setLoading(true)
-      const newList = await searchingGamesList({ search })
-      setGames(newList)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false)
+  const getGames = useCallback(
+    async ({ search }) => {
+      if (prevSearch.current === search) return
+      try {
+        setLoading(true)
+        const newList = await searchingGamesList({ search })
+        setSearchedGames(newList)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
+    }, [])
+
+  const mainGames = useCallback(
+    async () => {
+      try {
+        setLoading(true)
+        const mainList = await mainGamesList()
+        setDefaultGames(mainList)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }
-
+  )
   const juegosOrdenados = useMemo(() => {
     return orden
-      ? [...games].sort((a, b) => a.name.localeCompare(b.name))
-      : games
-  }, [orden, games])
+      ? [...searchedGames].sort((a, b) => a.name.localeCompare(b.name))
+      : searchedGames
+  }, [orden, searchedGames])
 
-  return { games: juegosOrdenados, getGames, loading }
+  return { games: juegosOrdenados, getGames, loading, mainGames, defaultGames }
 }
 
 export default useGame

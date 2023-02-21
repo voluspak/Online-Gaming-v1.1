@@ -1,15 +1,15 @@
 import React from 'react'
 
-function Games ({ gameList }) {
+function Games ({ gameList, list }) {
   const hasGames = gameList?.length > 0
   return (
     hasGames
-      ? <DisplayGames />
-      : <NoResults />
+      ? <DisplaySearch gameList={gameList} />
+      : <DisplayMain />
   )
 }
 
-function DisplayGames ({ gameList }) {
+function DisplaySearch ({ gameList }) {
   return (
     <ul className='w-5/6 mx-auto grid grid-cols-autoFit gap-10'>
       {
@@ -31,8 +31,8 @@ function DisplayGames ({ gameList }) {
   )
 }
 
-function NoResults () {
-  return (<h2 className='font-bold text-red-900 text-xl'>¡No se encontraron juegos para esta busqueda!</h2>)
+function DisplayMain () {
+  return (<h2 className='text-xl font-bold text-violet-700'>Encuentra la informacion de cualquier juego que necesites</h2>)
 }
 
 export default Games
